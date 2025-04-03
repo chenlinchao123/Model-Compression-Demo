@@ -8,7 +8,7 @@ import torch
 from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
 import math
-from kd.nets import TeacherNet, StudentNet
+from nets import TeacherNet, StudentNet
 from torch import nn
 import time
 
@@ -24,9 +24,12 @@ class Detector:
             transforms.ToTensor(),
             transforms.Normalize([0.1307], [0.3081])
         ])
-        self.test_data = DataLoader(datasets.MNIST("../datasets/", train=False, transform=self.trans, download=False),
+        self.test_data = DataLoader(datasets.MNIST("../datasets/", train=False, transform=self.trans, download=True),
                                     batch_size=100, shuffle=True)
-        self.net.load_state_dict(torch.load(net_path, map_location=self.device))
+        # 修改为绝对路径
+        import os
+        abs_net_path = os.path.join(os.path.dirname(__file__), net_path)
+        self.net.load_state_dict(torch.load(abs_net_path, map_location=self.device))
         self.net.eval()
 
     def detect(self):

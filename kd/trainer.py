@@ -3,14 +3,17 @@
 # @Version：V 0.1
 # @File : trainer.py
 # @desc :训练老师跟学生网络
+import os
+
 
 import torch
 from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
 import math
-from kd.nets import TeacherNet, StudentNet
+from nets import TeacherNet, StudentNet
 from torch import nn
 from torch.functional import F
+import os
 
 
 class Trainer:
@@ -22,9 +25,9 @@ class Trainer:
             transforms.ToTensor(),
             transforms.Normalize([0.1307], [0.3081])
         ])
-        self.train_data = DataLoader(datasets.MNIST("../datasets/", train=True, transform=self.trans, download=False),
+        self.train_data = DataLoader(datasets.MNIST("../datasets/", train=True, transform=self.trans, download=True),
                                      batch_size=1000, shuffle=True, drop_last=True)
-        self.test_data = DataLoader(datasets.MNIST("../datasets/", False, self.trans, download=False), batch_size=10000,
+        self.test_data = DataLoader(datasets.MNIST("../datasets/", False, self.trans, download=True), batch_size=10000,
                                     shuffle=True)
         self.CrossEntropyLoss = nn.CrossEntropyLoss()
         self.KLDivLoss = nn.KLDivLoss()
